@@ -21,8 +21,8 @@ A zero-knowledge proof-based number guessing game where players can prove they k
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/HarshalBhangale/Zkguess
+cd Zkguess
 ```
 
 2. Install dependencies:
