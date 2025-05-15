@@ -1,6 +1,20 @@
-# Compiler files
+# Node.js
+node_modules/
+package-lock.json
+.env
+
+# Foundry
 cache/
 out/
+broadcast/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+*.log
 
 # Ignores development broadcast logs
 !/broadcast
@@ -9,6 +23,3 @@ out/
 
 # Docs
 docs/
-
-# Dotenv file
-.env
