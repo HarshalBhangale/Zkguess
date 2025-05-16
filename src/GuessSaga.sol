@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "./GuessVerifier.sol";
 
 contract ZkGuessSaga {
-    // The verifier contract that will verify our zero-knowledge proofs
+    // The verifier contract that will verify our zk proofs
     Groth16Verifier public verifier;
 
     // Store the secret number commitment
