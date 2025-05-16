@@ -8,7 +8,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Store game state in memory (in production, use a database)
 const games = new Map();
 
 // Debug endpoint to see all active games
