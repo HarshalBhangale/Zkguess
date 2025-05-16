@@ -222,6 +222,45 @@ The game uses Merkle trees to efficiently verify the validity of guesses without
    - If the proof is valid, the guess is considered legitimate
    - This ensures the guess is one of the pre-approved valid guesses
 
+### Merkle Tree Structure
+```
+                                    Root (H1-10)
+                                    /           \
+                                   /             \
+                                  /               \
+                                 /                 \
+                        H1-5                      H6-10
+                        /   \                     /   \
+                       /     \                   /     \
+                      /       \                 /       \
+                     /         \               /         \
+                H1-3           H4-5        H6-8          H9-10
+                /  \           /  \         /  \         /  \
+               /    \         /    \       /    \       /    \
+              /      \       /      \     /      \     /      \
+           H1-2      H3    H4      H5   H6-7    H8   H9      H10
+           /  \      |     |       |    /  \     |    |       |
+          /    \     |     |       |   /    \    |    |       |
+         /      \    |     |       |  /      \   |    |       |
+        H1      H2  H3    H4      H5 H6      H7 H8   H9      H10
+        |       |    |     |       |  |       |  |    |       |
+        1       2    3     4       5  6       7  8    9       10
+```
+
+### Verification Process
+For example, to verify number 5 is in the tree:
+1. Start with H5 (hash of 5)
+2. Hash H5 with H4 to get H4-5
+3. Hash H4-5 with H1-3 to get H1-5
+4. Hash H1-5 with H6-10 to get Root
+5. Compare with stored root
+
+### Key Points to Highlight
+- The tree is balanced and complete
+- Each level halves the number of nodes
+- Proof size is logarithmic (O(log n))
+- Only the root needs to be stored on-chain
+- The structure allows for efficient verification
 
 ### Let's say for Example : 
 
