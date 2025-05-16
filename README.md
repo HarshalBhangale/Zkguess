@@ -243,9 +243,8 @@ For example, to verify number 5 is in the tree:
 4. Hash H1-5 with H6-10 to get Root
 5. Compare with stored root
 
-### Key Points to Highlight
+### Few Points to Highlight about the tree.
 - The tree is balanced and complete
 - Each level halves the number of nodes
 - Proof size is logarithmic (O(log n))
 - Only the root needs to be stored on-chain
-- The structure allows for efficient verification
