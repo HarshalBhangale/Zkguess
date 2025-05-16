@@ -2,25 +2,36 @@ const { ethers } = require('ethers');
 require('dotenv').config();
 
 // Import contract ABI
-const contractABI = require('./abi/ZkGuessSaga.json').abi;
+const contractABI = require('./abi/GuessSaga.json').abi;
 
+// Initialize provider and wallet
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, contractABI, wallet);
 
-async function startGame(commitment) {
+// Initialize contract
+const contract = new ethers.Contract(
+    process.env.CONTRACT_ADDRESS,
+    contractABI,
+    wallet
+);
+
+async function startGame(commitment, merkleRoot) {
     try {
-        console.log('Starting game with commitment:', commitment);
-        const tx = await contract.startGame(commitment);
-        await tx.wait();
-        return { success: true, txHash: tx.hash };
+        console.log('Starting game with:', { commitment, merkleRoot });
+        const tx = await contract.startGame(commitment, merkleRoot);
+        const receipt = await tx.wait();
+        console.log('Game started successfully:', receipt.hash);
+        return { success: true, txHash: receipt.hash };
     } catch (error) {
         console.error('Error starting game:', error);
-        return { success: false, error: error.message };
+        return { 
+            success: false, 
+            error: error.reason || error.message 
+        };
     }
 }
 
-async function submitGuess(proof, guess, isCorrect) {
+async function submitGuess(proof, guess, isCorrect, merkleProof) {
     try {
         console.log('Submitting guess:', {
             guess,
@@ -28,9 +39,9 @@ async function submitGuess(proof, guess, isCorrect) {
             proof: {
                 a: proof.a,
                 b: proof.b,
-                c: proof.c,
-                input: proof.input
-            }
+                c: proof.c
+            },
+            merkleProof
         });
 
         const tx = await contract.submitGuess(
@@ -38,23 +49,37 @@ async function submitGuess(proof, guess, isCorrect) {
             proof.b,
             proof.c,
             guess,
-            isCorrect
+            isCorrect,
+            merkleProof
         );
-        await tx.wait();
-        return { success: true, txHash: tx.hash };
+        const receipt = await tx.wait();
+        console.log('Guess submitted successfully:', receipt.hash);
+        return { success: true, txHash: receipt.hash };
     } catch (error) {
         console.error('Error submitting guess:', error);
-        return { success: false, error: error.message };
+        return { 
+            success: false, 
+            error: error.reason || error.message 
+        };
     }
 }
 
 async function getGameState() {
     try {
-        const [isActive, commitment] = await contract.getGameState();
-        return { success: true, isActive, commitment };
+        const [isActive, commitment, merkleRoot] = await contract.getGameState();
+        console.log('Game state retrieved:', { isActive, commitment, merkleRoot });
+        return { 
+            success: true, 
+            isActive, 
+            commitment,
+            merkleRoot
+        };
     } catch (error) {
         console.error('Error getting game state:', error);
-        return { success: false, error: error.message };
+        return { 
+            success: false, 
+            error: error.reason || error.message 
+        };
     }
 }
 
