@@ -167,3 +167,67 @@ MIT License
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
+
+## 🌳 Merkle Tree Implementation
+
+The game uses Merkle trees to efficiently verify the validity of guesses without revealing the secret number. Here's how it works:
+
+### Structure
+- Each leaf in the tree represents a possible guess (numbers 1-10)
+- The tree is constructed using keccak256 hashing function
+- The root of the tree is stored on-chain in the smart contract
+
+### Components
+
+1. **Smart Contract (`GuessSaga.sol`)**
+   ```solidity
+   // Stores the Merkle root
+   bytes32 public merkleRoot;
+   
+   // Verifies Merkle proofs using OpenZeppelin's library
+   require(
+       MerkleProof.verify(merkleProof, merkleRoot, leaf),
+       "Invalid Merkle proof"
+   );
+   ```
+
+2. **Backend (`merkleTree.js`)**
+   ```javascript
+   class MerkleTree {
+       // Constructs the tree from possible guesses
+       constructor(leaves = [])
+       
+       // Generates proof for a specific guess
+       getProof(index)
+       
+       // Verifies if a guess is valid
+       verify(proof, leaf, root)
+   }
+   ```
+
+### How It Works
+
+1. **Tree Construction**
+   - When a game starts, a Merkle tree is constructed with all possible valid guesses
+   - Each leaf is a hash of a possible guess number
+   - The root of this tree is stored in the smart contract
+
+2. **Proof Generation**
+   - When a player makes a guess, the backend generates a Merkle proof
+   - The proof contains the minimum number of hashes needed to verify the guess
+   - This proof is submitted along with the guess to the smart contract
+
+3. **Verification**
+   - The smart contract verifies the proof against the stored root
+   - If the proof is valid, the guess is considered legitimate
+   - This ensures the guess is one of the pre-approved valid guesses
+
+
+### Let's say for Example : 
+
+1. Game starts with secret number 5
+2. Backend constructs Merkle tree with leaves [1,2,3,4,5,6,7,8,9,10]
+3. Player guesses 5
+4. Backend generates Merkle proof for 5
+5. Smart contract verifies the proof against stored root
+6. If valid, the guess is accepted
