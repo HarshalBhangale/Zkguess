@@ -156,18 +156,6 @@ Run the test suite:
 forge test
 ```
 
-## 📝 License
-
-MIT License
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## 🌳 Merkle Tree Implementation
 
 The game uses Merkle trees to efficiently verify the validity of guesses without revealing the secret number. Here's how it works:
